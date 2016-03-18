@@ -1,0 +1,17 @@
+#, Provider, Region, CPUs, Memory, Storage, DiskType, OS, Cost,Comment
+1,1,0,1,2,0,0,0,30, AWS T2 small German
+2,1,0,2,4,0,0,0,60, AWS T2 medium Germany
+3,1,0,2,8,0,0,0,120, AWS T2 large Germany
+4,1,2,1,2,0,0,0,28, AWS T2 small Ireland
+5,1,2,2,4,0,0,0,56, AWS T2 medium Ireland
+6,1,2,2,8,0,0,0,112, AWS T2 large Ireland
+7,2,0,1,1,25,0,0,42, SoftLayer Germany
+8,2,0,2,2,25,0,0,116, SoftLayer Germany
+9,2,0,2,8,25,0,0,177, SoftLayer Germany
+10,2,1,1,1,25,0,0,42, SoftLayer Paris
+11,2,1,2,2,25,0,0,116, SoftLayer Paris
+12,2,1,2,8,25,0,0,177, SoftLayer Paris
+13,0,2,1,2,70,0,0,51, Azure Dublin
+14,0,2,2,4,135,0,0,101, Azure Dublin
+15,0,2,4,7,285,0,0,202, Azure Dublin
+16,0,2,2,7,100,1,0,142, Azure Dublin
