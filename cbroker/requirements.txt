@@ -1,0 +1,3 @@
+sqlalchemy
+mysql-python
+python-dockercloud
