@@ -25,7 +25,7 @@ https://github.com/sonnenfeldt/peyresourde/tree/master/cbroker
 
 `[MySQL]` 
 
-`database.user=<user name>`.
+`database.user=<user name>`
 
 `database.password=<password>` 
 
