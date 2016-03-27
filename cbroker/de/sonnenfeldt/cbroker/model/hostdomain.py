@@ -1,22 +1,9 @@
+from de.sonnenfeldt.cbroker.model.hosttemplate import HostTemplate
 
-class HostDomain():
+class HostDomainMember(HostTemplate):
 
-    id = None
+ 
     host_id = None
-    name = None
-    provider_id = None
-    host_type_id = None
-    region_id = None
-    data_center_id = None
-    az_index = None
-    cpu = None
-    memory = None
-    disk_size = None
-    disk_type_id = None
-    private = None
-    optimized = None
-    cost = None
-    node_type_uri = None
     
     def __init__(self):
         '''

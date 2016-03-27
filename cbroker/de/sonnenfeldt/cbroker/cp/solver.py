@@ -1,6 +1,5 @@
-from Numberjack import Variable
 
-class CBrokerSolver():
+class CBSolver():
     
     model = None
     
@@ -16,4 +15,5 @@ class CBrokerSolver():
         return res
     
     def getNextSolution(self):
-        return self.s.getNextSolution()
+        res = self.s.getNextSolution()
+        return res

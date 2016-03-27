@@ -7,7 +7,7 @@ class HostDao():
     host = None
 
     def __init__(self,host = None):
-        if host != None:
+        if host is not None:
             self.host = host
         else:
             self.host = Host()
@@ -52,10 +52,19 @@ class HostDao():
         for res in result:
             self.host.id = res.id
             self.host.host_template_id = res.host_template_id
-            self.node_uri = res.node_uri
-            self.node_cluster_uri = res.node_cluster_uri
+            self.host.node_uri = res.node_uri
+            self.host.node_cluster_uri = res.node_cluster_uri
             
         return self.host
+
+    def delete(self, oid):
+        dbconfig = DBConfig()
+        db = dbconfig.get_db()
+        
+        table = db.get_hosts()
+        s = table.delete(table.c.id == oid)
+        s.execute()
+
 
     def cleanup(self):
         dbconfig = DBConfig()
@@ -64,18 +73,3 @@ class HostDao():
         table = db.get_hosts()        
         d = table.delete()
         d.execute()
-
-
-
-h = Host()
-h.host_template_id = 2
-h.node_uri = 'test1'
-h.node_cluster_uri = 'test2'
-dao=HostDao(h)
-
-oid = dao.save()
-print "oid: ", oid
-        
-dao2 = HostDao()
-r2 = dao2.load(oid)
-print r2.toString()   

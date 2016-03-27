@@ -1,6 +1,6 @@
 from Numberjack import Variable
 
-class CBrokerVariables():
+class CBVariables():
    
     MAX_PROVIDERS = 5
     MAX_HOST_TYPES = 2
@@ -12,7 +12,7 @@ class CBrokerVariables():
     MAX_DISK_SIZES = 48000
     MAX_DISK_TYPES = 2
     MAX_PRIVATE = 1
-    MAX_OPTIMIZED = 5
+    MAX_OPTIMIZED = 6
     MAX_COST = 99999
 
     provider = None
@@ -34,7 +34,7 @@ class CBrokerVariables():
         self.host_type = Variable(1, self.MAX_HOST_TYPES, "host_type")
         self.region = Variable(1,self.MAX_REGIONS,"region")
         self.data_center = Variable(1,self.MAX_DATA_CENTERS,"data_center")
-        self.az = Variable(1,self.MAX_AZ,"az")
+        self.az = Variable(0,self.MAX_AZ,"az")
         self.cpu = Variable(1,self.MAX_CPU,"cpu")
         self.memory = Variable(1,self.MAX_MEMORY,"memory")
         self.disk_size = Variable(1,self.MAX_DISK_SIZES,"disk_size")

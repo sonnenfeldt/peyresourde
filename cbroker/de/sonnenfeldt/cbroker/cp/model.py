@@ -1,18 +1,21 @@
 from Numberjack import Model
 from de.sonnenfeldt.cbroker.db.hostdomaindao import HostDomainDao
-from de.sonnenfeldt.cbroker.cp.variables import CBrokerVariables
+from de.sonnenfeldt.cbroker.cp.variables import CBVariables
 from de.sonnenfeldt.cbroker.model.request import Request
 
 
-class CBBrokerModel():
+class CBModel():
     
     m = None
     r = None
-    s = None
+  #  s = None
+    
+    az_supported = False
     
     def __init__(self, request):
         self.m = Model()
         self.r = request
+        print 'request: ', self.r
         
     def __and(self, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12):
         expr = (b1 & b2 & b3 & b4 & b5 & b6 & b7 & b8 & b9 & b10 & b11 & b12)
@@ -45,37 +48,61 @@ class CBBrokerModel():
                             v.cost == int(res.cost)))
           
         self.m.add(expr)
+        #print self.m
 
 
-    def addRequest(self):
+    def addRequest(self, v):
         
-        if (r.host_type_id > 0):
-            self.m.add(v.host_type == int(r.host_type_id))
-            
-        if (r.region_id > 0):    
-            self.m.add(v.region == r.region_id)
-   
-        self.m.add(v.cpu >= int(r.cpu * r.op_factor))
-   
-        self.m.add(v.memory >= int(r.memory * r.op_factor))
-        self.m.add(v.disk_size >= int(r.disk_size * r.op_factor))
+        print "request: ", self.r
         
-        if (r.disk_type_id > 0):    
-            self.m.add(v.disk_type == int(r.disk_type_id))        
-
-        if (r.price_limit > 0):    
-            self.m.add(v.cost <= int(r.price_limit))  
+        if (self.r.host_type_id > 0):
+            self.m.add(v.host_type == int(self.r.host_type_id))
             
-        self.m.add(v.private == int(r.private))
-        self.m.add(v.optimized == int(r.optimized))
+        if (self.r.region_id > 0):    
+            self.m.add(v.region == int(self.r.region_id))
+   
+        self.m.add(v.cpu >= int(self.r.cpu * self.r.op_factor))
+   
+        self.m.add(v.memory >= int(self.r.memory * self.r.op_factor))
+        self.m.add(v.disk_size >= int(self.r.disk_size * self.r.op_factor))
+        
+        if (self.r.disk_type_id > 0):    
+            self.m.add(v.disk_type == int(self.r.disk_type_id))        
+
+        if (self.r.price_limit > 0):    
+            self.m.add(v.cost <= int(self.r.price_limit))  
+           
+        if (self.r.private > 0):    
+            self.m.add(v.private == int(self.r.private))
+            
+        if (self.r.optimized > 0):
+            self.m.add(v.optimized == int(self.r.optimized))
+        
+        #print self.m
 
         
     def addObjective(self, expr):
         self.m.add(expr)
 
- 
+    def addAnticollcation(self,va):
+        # add ha anti-collocation constraints
+        for x in range(self.r.dr_scale):
+            for y_1 in range(self.r.ha_scale):
+                for y_2 in range(self.r.ha_scale):
+                    if y_1!=y_2:
+                        self.m.add( ((va[x][y_1].az != va[x][y_2].az) &  (va[x][y_1].data_center == va[x][y_2].data_center) & self.az_supported)  |
+                                    ((va[x][y_1].data_center != va[x][y_2].data_center) & (va[x][y_1].region == va[x][y_2].region))
+                                     )
+                
 
-
+        # add different region for DR
+        for x_1 in range(self.r.dr_scale):
+            for x_2 in range(self.r.dr_scale):
+                if x_1 != x_2:
+                    for y_1 in range(self.r.ha_scale):
+                        for y_2 in range(self.r.ha_scale):
+                            self.m.add(va[x_1][y_1].region != va[x_2][y_2].region) 
+    
 r = Request()
 r.host_type_id = 0
 r.region_id = 0
@@ -91,6 +118,6 @@ r.optimized = 0
 r.private = 0
 r.service_uri = 'test'
 
-v = CBrokerVariables()
-m = CBBrokerModel(r)
+v = CBVariables()
+m = CBModel(r)
 m.addHosts(v)

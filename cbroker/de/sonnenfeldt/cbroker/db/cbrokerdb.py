@@ -12,7 +12,7 @@ class CBrokerDB() :
     
     def __init__(self,dburl):
         self.engine = create_engine(dburl)
-        self.engine.echo = True
+        self.engine.echo = False
         Session = sessionmaker(self.engine)
         self.session = Session()
         self.md = MetaData(self.engine)

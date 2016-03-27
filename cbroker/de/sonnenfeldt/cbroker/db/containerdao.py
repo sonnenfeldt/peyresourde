@@ -39,6 +39,7 @@ class ContainerDao():
                   memory=self.container.memory,
                   disk_size=self.container.disk_size,
                   request_id=self.container.request_id,
+                  service_uri=self.container.service_uri,
                   container_uri=self.container.container_uri)
         
         return oid
@@ -59,10 +60,45 @@ class ContainerDao():
             self.container.memory = res.memory
             self.container.disk_size = res.disk_size
             self.container.request_id = res.request_id
+            self.container.service_uri = res.service_uri
             self.container.container_uri = res.container_uri
             
         return self.container
 
+
+    def load_all(self):
+        dbconfig = DBConfig()
+        db = dbconfig.get_db()
+        
+        table = db.get_containers()     
+                    
+        s = table.select()
+        result = s.execute()
+        
+        print 'result.rowcount: ', result.rowcount
+                
+        return result
+       
+    def delete(self, oid):
+        dbconfig = DBConfig()
+        db = dbconfig.get_db()
+        
+        table = db.get_containers()
+        s = table.delete(table.c.id == oid)
+        s.execute()
+    
+    def is_empty(self, host_id):
+        dbconfig = DBConfig()
+        db = dbconfig.get_db()
+        
+        table = db.get_containers() 
+        s = table.select(table.c.host_id == host_id)
+        result = s.execute()
+        
+        print "is_empty:", (result.rowcount == 0)
+        return (result.rowcount == 0)
+                   
+    
     def cleanup(self):
         dbconfig = DBConfig()
         db = dbconfig.get_db()
@@ -71,22 +107,3 @@ class ContainerDao():
         d = table.delete()
         d.execute()
 
-
-
-c = Container()
-c.host_id = 2
-c.region_id = 2
-c.cpu = 2
-c.memory = 4
-c.disk_size = 40
-c.request_id = 100
-c.container_uri = 'test'
-
-dao=ContainerDao(c)
-
-oid = dao.save()
-print "oid: ", oid
-        
-dao2 = ContainerDao()
-r2 = dao2.load(oid)
-print r2.toString()   

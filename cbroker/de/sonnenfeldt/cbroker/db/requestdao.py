@@ -7,7 +7,7 @@ class RequestDao():
     request = None
 
     def __init__(self,request = None):
-        if request != None:
+        if request is not None:
             self.request = request
         else:
             self.request = Request()
@@ -46,7 +46,7 @@ class RequestDao():
                   price_limit=self.request.price_limit,
                   private=self.request.private,
                   optimized=self.request.optimized,
-                  service_uri=self.request.service_uri)
+                  image=self.request.image)
         
         return oid
         
@@ -73,7 +73,7 @@ class RequestDao():
             self.request.price_limit = res.price_limit
             self.request.optimized = res.optimized
             self.request.private = res.private
-            self.request.service_uri = res.service_uri
+            self.request.image = res.image
             
         return self.request
 
@@ -84,28 +84,3 @@ class RequestDao():
         table = db.get_requests()        
         d = table.delete()
         d.execute()
-
-
-r = Request()
-r.host_type_id = 2
-r.region_id = 2
-r.cpu = 2
-r.memory = 4
-r.disk_size = 40
-r.disk_type_id = 2
-r.ha_scale = 1
-r.dr_scale = 1
-r.op_factor = 1
-r.price_limit = 5000
-r.optimized = 1
-r.private = 1
-r.service_uri = 'test'
-        
-dao=RequestDao(r)
-        
-oid = dao.save()
-print "oid: ", oid
-                
-dao2 = RequestDao()
-r2 = dao2.load(oid)
-print r2.toString()   

@@ -39,10 +39,3 @@ class HostTemplateDao():
             self.host_template.node_type_uri = res.node_type_uri
             
         return self.host_template
-
-
-oid=1361
-
-dao2 = HostTemplateDao()
-r2 = dao2.load(oid)
-print r2.toString()   

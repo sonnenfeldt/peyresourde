@@ -1,19 +1,11 @@
+from de.sonnenfeldt.cbroker.model.hostspecification import HostSpecification
 
-class HostTemplate():
+class HostTemplate(HostSpecification):
 
-    id = None
     name = None
     provider_id = None
-    host_type_id = None
-    region_id = None
     data_center_id = None
     az_index = None
-    cpu = None
-    memory = None
-    disk_size = None
-    disk_type_id = None
-    private = None
-    optimized = None
     cost = None
     node_type_uri = None
     

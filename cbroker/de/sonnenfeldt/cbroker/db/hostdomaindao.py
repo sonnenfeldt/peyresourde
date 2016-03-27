@@ -1,4 +1,4 @@
-from de.sonnenfeldt.cbroker.model.hostdomain import HostDomain
+from de.sonnenfeldt.cbroker.model.hostdomain import HostDomainMember
 from de.sonnenfeldt.cbroker.model.request import Request
 from de.sonnenfeldt.cbroker.db.dbconfig import DBConfig
 
@@ -10,7 +10,7 @@ class HostDomainDao():
         if host_domain != None:
             self.host_domain = host_domain
         else:
-            self.host_domain = HostDomain()
+            self.host_domain = HostDomainMember()
                     
 
     def load(self,oid):
@@ -50,8 +50,7 @@ class HostDomainDao():
         expr = ((table.c.cpu >= (r.cpu * r.op_factor)) | ((table.c.host_id != None) & (table.c.cpu  >= r.cpu)) )
         expr = expr & ((table.c.memory >= (r.memory * r.op_factor)) | ((table.c.host_id != None) & (table.c.memory >= r.memory)))
         expr = expr & ((table.c.disk_size >= (r.disk_size * r.op_factor)) | ((table.c.host_id != None) & (table.c.disk_size >= r.disk_size)))
-        expr = expr & (table.c.private == r.private)
-        expr = expr & (table.c.optimized == r.optimized)
+
         
         if (r.host_type_id > 0):
             expr = expr & (table.c.host_type_id == r.host_type_id)
@@ -63,8 +62,14 @@ class HostDomainDao():
             expr = expr & (table.c.disk_type_id == r.disk_type_id)
             
         if (r.price_limit > 0):    
-            expr = expr & ((table.c.cost <= r.price_limit) | ((table.c.host_id != None) & (table.c.cost <= r.price_limit)))            
+            expr = expr & ((table.c.cost <= r.price_limit) )
             
+        if (r.private > 0):
+            expr = expr & (table.c.private == r.private)
+        
+        if (r.optimized > 0):
+            expr = expr & (table.c.optimized == r.optimized)            
+                        
         s = table.select(expr)
         result = s.execute()
         
@@ -95,35 +100,3 @@ class HostDomainDao():
             hd.node_type_uri = res.node_type_uri
         
         return hd
-
-'''
-oid=1361
-
-dao = HostDomainDao()
-r2 = dao.load(oid)
-print r2   
-
-r = Request()
-r.host_type_id = 0
-r.region_id = 2
-r.cpu = 1
-r.memory = 2
-r.disk_size = 3
-r.disk_type_id = 0
-r.ha_scale = 1
-r.dr_scale = 1
-r.op_factor = 4
-r.price_limit = 10000
-r.optimized = 0
-r.private = 0
-r.service_uri = 'test'
-
-dao = HostDomainDao()
-result = dao.load_using_request(r)
-
-print 'len: ', result.rowcount
-
-for res in result:
-    print res.name
-    
-'''
