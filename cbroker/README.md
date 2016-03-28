@@ -1,6 +1,6 @@
 #CSB Framework (cbroker)
 
-In order to the use CSB Framework the following steps have to be performed:
+In order to use the CSB Framework the following steps have to be performed:
 ##Download the source code of the CSB framework from the following repository:
 https://github.com/sonnenfeldt/peyresourde/tree/master/cbroker
 
